@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3001",
-    "dev:api": "tsx api/server.ts",
+    "dev:api": "tsx server-local/server.ts",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\"",
     "build": "vite build",
     "preview": "vite preview --port 3001",

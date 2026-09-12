@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import http from 'http';
 
 // Start the server
-const server = spawn('npx', ['tsx', 'api/server.ts'], {
+const server = spawn('npx', ['tsx', 'server-local/server.ts'], {
   cwd: process.cwd(),
   stdio: 'inherit',
   env: process.env,
