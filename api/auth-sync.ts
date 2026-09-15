@@ -31,7 +31,7 @@ function signJwt(payload, privateKeyPem) {
   var sig = signer.sign(privateKeyPem, "base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   return h + "." + p + "." + sig;
 }
-var _googleToken = null;
+var _googleToken: { token: string; exp: number } | null = null;
 async function googleAccessToken() {
   if (_googleToken && _googleToken.exp > Date.now() + 60000) return _googleToken.token;
   var email = (process.env.FIREBASE_CLIENT_EMAIL || "").trim();
@@ -45,7 +45,7 @@ async function googleAccessToken() {
   _googleToken = { token: j.access_token, exp: Date.now() + (j.expires_in || 3600) * 1000 };
   return _googleToken.token;
 }
-async function verifyFirebaseToken(req) {
+async function verifyFirebaseToken(req: any): Promise<{ uid: string; email: string | null; name: string | null; picture: string | null } | null> {
   var header = (req.headers && req.headers.authorization) || "";
   var token = header.indexOf("Bearer ") === 0 ? header.slice(7).trim() : "";
   if (!token) return null;
@@ -62,11 +62,11 @@ async function verifyFirebaseToken(req) {
     return { uid: u.localId, email: (u.email || null), name: (u.displayName || null), picture: (u.photoUrl || null) };
   } catch (e) { return null; }
 }
-async function sbRest(path, opts) {
+async function sbRest(path: string, opts?: { method?: string; prefer?: string; body?: any }): Promise<any> {
   var c = sb();
-  var o = opts || {};
+  var o: { method?: string; prefer?: string; body?: any } = opts || {};
   var url = c.base + "/rest/v1/" + path;
-  var headers = { apikey: c.key, Authorization: "Bearer " + c.key, "Content-Type": "application/json" };
+  var headers: Record<string, string> = { apikey: c.key, Authorization: "Bearer " + c.key, "Content-Type": "application/json" };
   if (o.prefer) headers.Prefer = o.prefer;
   var r = await fetch(url, { method: o.method || "GET", headers: headers, body: o.body ? JSON.stringify(o.body) : undefined });
   var text = await r.text().catch(function () { return ""; });
@@ -96,7 +96,7 @@ function docToRow(doc) {
   for (var k of Object.keys(row)) { if (row[k] === undefined) delete row[k]; }
   return row;
 }
-async function syncUser(identity) {
+async function syncUser(identity: { uid: string; email: string | null; name: string | null; picture: string | null }): Promise<{ id: string; firebaseUid: string; email: string; fullName: string | null; avatarUrl: string | null; role: string }> {
   var uid = identity.uid;
   var email = identity.email;
   var name = identity.name;
@@ -118,7 +118,7 @@ async function syncUser(identity) {
     }
     return { id: row.id, firebaseUid: row.firebase_uid, email: row.email, fullName: (row.full_name === undefined ? null : row.full_name), avatarUrl: (row.avatar_url === undefined ? null : row.avatar_url), role: (row.role === "admin" ? "admin" : "user") };
   }
-  var patch = { role: role, updated_at: new Date().toISOString() };
+  var patch: { role: string; updated_at: string; full_name?: string; avatar_url?: string; email?: string } = { role: role, updated_at: new Date().toISOString() };
   if (name && name !== existing.full_name) patch.full_name = name;
   if (picture && picture !== existing.avatar_url) patch.avatar_url = picture;
   if (email && email !== existing.email) patch.email = email;
