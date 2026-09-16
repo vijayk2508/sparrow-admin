@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Save, RotateCcw, Plus, Trash2, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Save, RotateCcw, Plus, Trash2, Loader2, CheckCircle2, AlertTriangle, Info, Award, ShieldAlert, Zap, Apple, UserCheck, Dumbbell } from 'lucide-react';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import { DEFAULT_SITE_SETTINGS } from '../../lib/seed';
 import { AdminCard, TextInput, NumberInput, TextAreaInput, ImageUpload, btnPrimary, btnGhost } from './ui';
 import type { SiteSettings, HeroStat, WhyChooseUsItem } from '../../types';
+
+const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Award, ShieldAlert, Zap, Apple, UserCheck, Dumbbell
+};
+const resolveIcon = (name: string): React.ComponentType<{ className?: string }> => ICONS[name] || Award;
 
 export const SiteSettingsTab: React.FC = () => {
   const { settings, loading, save } = useSiteSettings();
@@ -143,11 +148,22 @@ export const SiteSettingsTab: React.FC = () => {
       </AdminCard>
 
       <AdminCard title="Why Choose Us" description="Feature cards under the hero.">
+        <div className="mb-4 flex items-start gap-2 text-[11px] font-mono text-zinc-500">
+          <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+          <span>Supported icons: Award, ShieldAlert, Zap, Apple, UserCheck, Dumbbell — the preview shows exactly what the live site renders. Unknown names fall back to Award.</span>
+        </div>
         <div className="space-y-3">
-          {whyChooseUs.map((f, i) => (
+          {whyChooseUs.map((f, i) => {
+            const PreviewIcon = resolveIcon(f.icon || '');
+            return (
             <div key={f.id || i} className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
               <TextInput label="Number" value={f.num || ''} onChange={(v) => updateFeature(i, { num: v })} />
-              <TextInput label="Icon Name" value={f.icon || ''} onChange={(v) => updateFeature(i, { icon: v })} placeholder="Award / ShieldAlert / Zap / Apple / UserCheck / Dumbbell" />
+              <div className="flex items-end gap-2">
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-400" title="Icon preview — rendered exactly like this on the live site">
+                  <PreviewIcon className="w-5 h-5" />
+                </div>
+                <TextInput label="Icon Name" value={f.icon || ''} onChange={(v) => updateFeature(i, { icon: v })} placeholder="Award / ShieldAlert / Zap / Apple / UserCheck / Dumbbell" />
+              </div>
               <TextInput label="Title" value={f.title || ''} onChange={(v) => updateFeature(i, { title: v })} />
               <button
                 type="button"
@@ -160,7 +176,8 @@ export const SiteSettingsTab: React.FC = () => {
                 <TextAreaInput label="Description" value={f.desc || ''} onChange={(v) => updateFeature(i, { desc: v })} rows={2} />
               </div>
             </div>
-          ))}
+            );
+          })}
           <button
             type="button"
             onClick={() => set('whyChooseUs', [...whyChooseUs, { id: `why-${Date.now()}`, num: String(whyChooseUs.length + 1).padStart(2, '0'), icon: 'Award', title: 'NEW FEATURE', desc: '' }])}
