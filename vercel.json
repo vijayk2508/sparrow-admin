@@ -8,7 +8,7 @@
     { "src": "^/api/auth/sync$", "dest": "/api/auth-sync.ts" },
     { "src": "^/api/me$", "dest": "/api/me.ts" },
     { "src": "^/api/upload$", "dest": "/api/upload.ts" },
-        { "src": "^/api/admin/db$", "dest": "/api/admin-db.ts" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "^/api/admin/db$", "dest": "/api/admin-db.ts" },
+    { "src": "/(?!assets/|api/).*", "dest": "/index.html" }
   ]
 }
