@@ -40,7 +40,7 @@ Env vars on Vercel: see `VERCEL_ENV_SETUP.md` (same Supabase + Firebase project 
 ## What's inside
 
 - **Login** — Google Sign-In via **Firebase Auth** (`src/lib/firebase.ts`), gated by an email whitelist; server-side truth is the Supabase `admins` table
-- **Dashboard** — content stats + one-click **Seed Initial Data** (calls `POST /api/admin/db {action:"seed"}`, which migrates the embedded `src/data/gymData.ts` snapshot into Supabase; idempotent, with a Force toggle)
+- **Dashboard** — live content stats (doc counts per collection). The one-time "Seed Initial Data" panel was removed once the Supabase DB was seeded (verified live) — the seed endpoint still exists at `POST /api/admin/db {action:"seed"}` if you ever need to re-run it (idempotent, with a Force toggle)
 - **CRUD managers** — Site Settings (hero, stats, why-choose-us), Coaches, Programs, Schedule, Membership Plans, Testimonials, Gallery, Events — with Supabase Storage image uploads
 - **Read-only viewers** — Bookings, Payments, Contact Queries
 
