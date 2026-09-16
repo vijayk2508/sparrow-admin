@@ -1,7 +1,7 @@
 // Self-contained Vercel serverless handler (NO cross-file deps).
 // Mirrors the sparrow-training-club success pattern: fetch-only Supabase REST.
 import { createSign } from "crypto";
-function cors(req, res) {
+function cors(req: any, res: any) {
   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -19,10 +19,10 @@ function pk() {
   if (raw.indexOf("\\n") !== -1) raw = raw.split("\\n").join("\n");
   return raw;
 }
-function b64url(input) {
+function b64url(input: string) {
   return Buffer.from(input).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
-function signJwt(payload, privateKeyPem) {
+function signJwt(payload: any, privateKeyPem: string) {
   var header = { alg: "RS256", typ: "JWT" };
   var h = b64url(JSON.stringify(header));
   var p = b64url(JSON.stringify(payload));
@@ -76,20 +76,20 @@ async function sbRest(path: string, opts?: { method?: string; prefer?: string; b
   return json;
 }
 
-var TABLES = { membershipPlans: "membership_plans", contactQueries: "contact_queries", siteSettings: "site_settings" };
+var TABLES: Record<string, string> = { membershipPlans: "membership_plans", contactQueries: "contact_queries", siteSettings: "site_settings" };
 var ALLOWED_TABLES = ["coaches","programs","schedule","membershipPlans","testimonials","gallery","events","siteSettings","bookings","payments","memberships","contactQueries"];
-function tableFor(path) {
+function tableFor(path: string): string {
   if (ALLOWED_TABLES.indexOf(path) === -1) throw new Error("Table not allowed: " + path);
   return TABLES[path] || path;
 }
-function rowToDoc(row) {
+function rowToDoc(row: any): any {
   if (row && Object.prototype.hasOwnProperty.call(row, "sort_order")) {
     var r = Object.assign({}, row); var s = r.sort_order; delete r.sort_order; delete r.created_at;
     r.order = (s === null || s === undefined) ? undefined : s; return r;
   }
   return row;
 }
-function docToRow(doc) {
+function docToRow(doc: any): any {
   var d = Object.assign({}, (doc || {})); var order = d.order; delete d.order;
   var row = Object.assign({}, d);
   if (order !== undefined && order !== null) row.sort_order = order;
