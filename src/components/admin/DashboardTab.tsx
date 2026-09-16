@@ -67,7 +67,7 @@ export const DashboardTab: React.FC = () => {
               {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
               {seeding ? 'Seeding…' : 'Seed Initial Data'}
             </button>
-            <a href="#/" className={btnGhost}>
+            <a href="https://www.sparrowtrainingclub.com" target="_blank" rel="noopener noreferrer" className={btnGhost}>
               <ExternalLink className="w-4 h-4" /> View Live Site
             </a>
           </div>

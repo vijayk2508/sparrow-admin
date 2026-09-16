@@ -22,7 +22,7 @@ export const AdminLogin: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#070709] text-white flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <a href="#/" className="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-white mb-6 transition-colors">
+        <a href="https://www.sparrowtrainingclub.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-white mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to site
         </a>
 
