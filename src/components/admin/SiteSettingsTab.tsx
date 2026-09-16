@@ -66,11 +66,12 @@ export const SiteSettingsTab: React.FC = () => {
   const heroStats = draft.heroStats || [];
   const whyChooseUs = draft.whyChooseUs || [];
 
-  const updateStat = (i: number, patch: Partial<HeroStat>) => {
+    const updateStat = (i: number, patch: Partial<HeroStat>) => {
     const next = [...heroStats];
     next[i] = { ...next[i], ...patch };
     set('heroStats', next);
-const updateFeature = (i: number, patch: Partial<WhyChooseUsItem>) => {
+  };
+  const updateFeature = (i: number, patch: Partial<WhyChooseUsItem>) => {
     const next = [...whyChooseUs];
     next[i] = { ...next[i], ...patch };
     set('whyChooseUs', next);
@@ -179,7 +180,6 @@ const updateFeature = (i: number, patch: Partial<WhyChooseUsItem>) => {
           Save Settings
         </button>
       </div>
-    </div>
+        </div>
   );
 };
-  };
